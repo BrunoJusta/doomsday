@@ -1,0 +1,611 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Missão Doomsday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#070b08" media="(prefers-color-scheme: dark)">
+<style>
+/* Layout: uma coluna mobile (máx 560px), header sticky, tab bar fixa em baixo.
+   Estrutura do DESIGN.md da Nike (ink/branco/cinza, pills, sem sombras, display uppercase gigante)
+   com o verde Doomsday como único acento. */
+:root{
+  --bg:#ffffff; --surface:#f5f5f5; --ink:#111111; --ink-2:#39393b; --mute:#707072;
+  --line:#e5e5e5; --line-strong:#cacacb;
+  --red:#12803a; --red-text:#0d6b2f; --on-red:#ffffff; --red-soft:#e9f5ec;
+  --tile:#0b140e; --on-tile:#f2f7f3; --tile-mute:#93a898; --glow:#3ee06b;
+  --ok:#0d6b2f;
+  --f-display:"Anton","Impact","Arial Narrow Bold",sans-serif;
+  --f-label:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --s-xs:4px; --s-sm:8px; --s-md:12px; --s-lg:18px; --s-xl:24px; --s-xxl:30px; --s-sec:48px;
+  --r-pill:9999px; --r-md:24px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#070b08; --surface:#111813; --ink:#f2f6f3; --ink-2:#c6d0c8; --mute:#8f9a92;
+  --line:#1c271f; --line-strong:#2e3d32;
+  --red:#36d363; --red-text:#5be884; --on-red:#04110a; --red-soft:#0f2316;
+  --tile:#0d1a11; --on-tile:#eef6f0; --tile-mute:#8fa596; --glow:#3ee06b; --ok:#5be884; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#070b08; --surface:#111813; --ink:#f2f6f3; --ink-2:#c6d0c8; --mute:#8f9a92;
+  --line:#1c271f; --line-strong:#2e3d32;
+  --red:#36d363; --red-text:#5be884; --on-red:#04110a; --red-soft:#0f2316;
+  --tile:#0d1a11; --on-tile:#eef6f0; --tile-mute:#8fa596; --glow:#3ee06b; --ok:#5be884; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--s-md);padding-block:var(--s-md)}
+.brand{display:flex;align-items:center;gap:var(--s-sm);min-width:0}
+.mark{background:var(--red);color:var(--on-red);font-family:var(--f-display);font-size:15px;line-height:1;padding:6px 7px 5px;letter-spacing:.02em;text-transform:uppercase}
+.brand-name{font-family:var(--f-label);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.count{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);white-space:nowrap;font-variant-numeric:tabular-nums}
+.count b{color:var(--red-text);font-weight:700}
+
+main{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.view{display:flex;flex-direction:column;gap:var(--s-xxl);padding-block:var(--s-xl)}
+
+/* progress segments */
+.segs{display:grid;grid-template-columns:repeat(23,1fr);gap:3px}
+.segs i{display:block;height:6px;background:var(--line)}
+.segs i.on{background:var(--red)}
+.segs i.now{background:var(--ink)}
+.prog-meta{display:flex;justify-content:space-between;gap:var(--s-md);margin-top:var(--s-sm);font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);font-variant-numeric:tabular-nums}
+
+/* eyebrow labels */
+.eyebrow{font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.eyebrow.red{color:var(--red-text)}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-md)}
+.sec-title{font-family:var(--f-display);font-size:28px;line-height:1;text-transform:uppercase;letter-spacing:.01em}
+
+/* hero tile (campaign tile) */
+.hero{background:var(--tile);color:var(--on-tile);padding:var(--s-xl) var(--s-lg) var(--s-lg);display:flex;flex-direction:column;gap:var(--s-lg);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 70% at 100% 0%,color-mix(in srgb,var(--glow) 28%,transparent),transparent 60%);pointer-events:none}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border:22px solid var(--glow);border-radius:50%;opacity:.85;pointer-events:none;box-shadow:0 0 40px color-mix(in srgb,var(--glow) 45%,transparent)}
+.hero > *{position:relative;z-index:1}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s-md);position:relative;z-index:1}
+.hero-num{font-family:var(--f-display);font-size:64px;line-height:.85;color:var(--glow);position:relative}
+.hero-num small{display:block;font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.1em;color:var(--tile-mute);margin-top:6px;text-transform:uppercase}
+.tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-label);font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:var(--r-pill);border:1px solid currentColor;white-space:nowrap}
+.hero .tag{color:var(--on-tile)}
+.hero-title{font-family:var(--f-display);font-size:clamp(44px,13vw,68px);line-height:.92;text-transform:uppercase;letter-spacing:.005em;position:relative;z-index:1}
+.hero-sub{font-family:var(--f-label);font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase;color:var(--tile-mute);margin-top:6px}
+.hero-log{color:var(--on-tile);opacity:.86;max-width:44ch}
+.hero-actions{display:flex;flex-wrap:wrap;gap:var(--s-sm)}
+
+/* buttons: pill only */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 24px;border-radius:var(--r-pill);border:0;cursor:pointer;font-weight:600;font-size:16px;line-height:1.2;text-decoration:none;transition:transform .12s ease,opacity .12s ease}
+.btn:active{transform:scale(.97)}
+.btn-red{background:var(--red);color:var(--on-red)}
+.btn-red:hover{opacity:.92}
+.btn-soft{background:var(--surface);color:var(--ink)}
+.btn-soft:hover{background:var(--line)}
+.btn-ghost-tile{background:transparent;color:var(--on-tile);box-shadow:inset 0 0 0 1.5px var(--tile-mute)}
+.btn-sm{min-height:40px;padding:8px 18px;font-size:15px}
+
+/* doomsday strip */
+.doom{display:flex;align-items:center;justify-content:space-between;gap:var(--s-md);padding:var(--s-md) var(--s-lg);background:var(--surface)}
+.doom-days{font-family:var(--f-display);font-size:34px;line-height:1;color:var(--red-text);font-variant-numeric:tabular-nums}
+.doom-txt{min-width:0}
+.doom-txt b{display:block;font-family:var(--f-label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:16px}
+.doom-txt span{color:var(--mute);font-size:14px}
+
+/* note card */
+.notes{display:flex;flex-direction:column;gap:var(--s-md)}
+.note{border:1px solid var(--line-strong);background:var(--bg)}
+.note.read{border-color:var(--line)}
+.note-head{width:100%;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:var(--s-md);padding:var(--s-md) var(--s-lg) var(--s-md) var(--s-md);background:none;border:0;text-align:left;cursor:pointer;min-height:64px}
+.note-head:hover{background:var(--surface)}
+.note-ico{width:36px;height:36px;display:grid;place-items:center;background:var(--red-soft);color:var(--red-text);font-family:var(--f-display);font-size:18px;line-height:1}
+.note.read .note-ico{background:var(--surface);color:var(--ok)}
+.note-name{min-width:0}
+.note-name b{display:block;font-family:var(--f-label);font-weight:700;font-size:18px;letter-spacing:.03em;text-transform:uppercase;line-height:1.15}
+.note-name span{font-size:13px;color:var(--mute);font-family:var(--f-label);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.chev{width:20px;height:20px;transition:transform .2s ease;color:var(--mute)}
+.note-head[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.note-body{padding:0 var(--s-lg) var(--s-lg);display:flex;flex-direction:column;gap:var(--s-md)}
+.gate{background:var(--red-soft);padding:var(--s-lg);display:flex;flex-direction:column;gap:var(--s-md);align-items:flex-start}
+.gate-t{display:flex;align-items:center;gap:var(--s-sm);font-family:var(--f-label);font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--red-text)}
+.gate p{color:var(--ink-2);font-size:15px}
+.note-text{display:flex;flex-direction:column;gap:var(--s-md);max-width:62ch}
+.note-text p{color:var(--ink-2)}
+.keep{border-top:1px solid var(--line);padding-top:var(--s-md)}
+.keep ul{margin:var(--s-sm) 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--s-sm)}
+.keep li{position:relative;padding-left:20px;font-size:15px}
+.keep li::before{content:"";position:absolute;left:0;top:.6em;width:10px;height:3px;background:var(--red)}
+.note-actions{display:flex;flex-wrap:wrap;gap:var(--s-sm);align-items:center}
+.done-txt{font-family:var(--f-label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);font-size:14px}
+
+.empty{background:var(--surface);padding:var(--s-lg);color:var(--ink-2)}
+.empty b{display:block;font-family:var(--f-label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+
+/* up next mini list */
+.after{display:flex;flex-direction:column}
+.after-row{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:var(--s-md);padding-block:var(--s-md);border-top:1px solid var(--line)}
+.after-row:last-child{border-bottom:1px solid var(--line)}
+.after-n{font-family:var(--f-display);font-size:22px;color:var(--mute);font-variant-numeric:tabular-nums}
+.after-row b{font-family:var(--f-label);font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;display:block;line-height:1.15}
+.after-row span{font-size:13px;color:var(--mute)}
+.mini{font-family:var(--f-label);font-weight:700;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.mini.red{color:var(--red-text)}
+
+/* filters */
+.chips{display:flex;gap:var(--s-sm);overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line-strong);background:var(--bg);color:var(--ink);border-radius:var(--r-pill);padding:8px 16px;font-weight:600;font-size:15px;white-space:nowrap;cursor:pointer;min-height:40px}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* timeline */
+.tl{position:relative;display:flex;flex-direction:column}
+.tl::before{content:"";position:absolute;left:17px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl-item{position:relative;display:grid;grid-template-columns:36px 1fr;gap:var(--s-md);padding-block:var(--s-sm)}
+.tl-node{position:relative;z-index:1;display:grid;place-items:center;width:36px;height:36px}
+.tl-item.watch .tl-node{background:var(--bg)}
+.tl-item.note-i .tl-node::before{content:"";width:12px;height:12px;background:var(--bg);border:2px solid var(--red);border-radius:50%}
+.tl-item.note-i.read .tl-node::before{background:var(--red)}
+.cbx{appearance:none;-webkit-appearance:none;margin:0;width:32px;height:32px;border:2px solid var(--ink);border-radius:50%;background:var(--bg);cursor:pointer;display:grid;place-items:center;transition:background .15s ease,border-color .15s ease}
+.cbx::after{content:"";width:12px;height:7px;border:3px solid var(--on-red);border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.cbx:checked{background:var(--red);border-color:var(--red)}
+.cbx:checked::after{opacity:1}
+.tl-main{min-width:0}
+.tl-watch{display:flex;flex-direction:column;gap:2px;padding:6px 0 var(--s-sm);cursor:pointer}
+.tl-watch .t{font-family:var(--f-display);font-size:24px;line-height:1;text-transform:uppercase;letter-spacing:.01em}
+.tl-watch .s{font-family:var(--f-label);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.tl-watch .m{display:flex;gap:var(--s-sm);align-items:center;flex-wrap:wrap;margin-top:4px}
+.tl-watch .l{font-size:14px;color:var(--mute);margin-top:4px;max-width:52ch}
+.tl-item.watch.seen .t{color:var(--mute)}
+.tl-item.watch.current .t{color:var(--red-text)}
+.now-pill{background:var(--ink);color:var(--bg);border-radius:var(--r-pill);padding:2px 10px;font-family:var(--f-label);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.tl-item.note-i .note{margin-top:2px}
+.tl-item.note-i .note-head{min-height:52px;padding-block:var(--s-sm)}
+.tl-item.note-i .note-ico{width:30px;height:30px;font-size:15px}
+.tl-item.note-i .note-name b{font-size:16px}
+
+/* notes page groups */
+.group{display:flex;flex-direction:column;gap:var(--s-md)}
+.group-h{display:flex;align-items:center;gap:var(--s-sm);flex-wrap:wrap}
+.group-h b{font-family:var(--f-label);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.group-h .eyebrow{font-size:12px}
+.reset{display:flex;flex-direction:column;gap:var(--s-sm);align-items:flex-start;border-top:1px solid var(--line);padding-top:var(--s-xl)}
+.reset p{color:var(--mute);font-size:14px}
+
+/* tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-xs);padding-block:6px}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;background:none;border:0;cursor:pointer;color:var(--mute);min-height:52px;text-decoration:none}
+.tab svg{width:22px;height:22px}
+.tab span{font-family:var(--f-label);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.tab[aria-current="page"]{color:var(--ink)}
+.tab[aria-current="page"] svg{color:var(--red-text)}
+.tab-badge{font-variant-numeric:tabular-nums}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><span class="mark" aria-hidden="true">MD</span><span class="brand-name">Missão Doomsday</span></div>
+    <div class="count" id="hdrCount" aria-live="polite"></div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <section class="view" id="view-inicio" aria-labelledby="h-inicio"></section>
+    <section class="view" id="view-timeline" aria-labelledby="h-timeline" hidden></section>
+    <section class="view" id="view-notas" aria-labelledby="h-notas" hidden></section>
+  </div>
+</main>
+
+<nav class="tabbar" aria-label="Secções">
+  <div class="wrap">
+    <a class="tab" href="#inicio" data-tab="inicio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2.5 14.6 8.8 21.5 9.3 16.2 13.7 17.9 20.5 12 16.8 6.1 20.5 7.8 13.7 2.5 9.3 9.4 8.8Z"/></svg>
+      <span>Próximo</span>
+    </a>
+    <a class="tab" href="#timeline" data-tab="timeline">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3v18"/><circle cx="6" cy="6" r="2.2" fill="currentColor"/><circle cx="6" cy="18" r="2.2"/><path d="M11 6h9M11 12h9M11 18h6"/></svg>
+      <span>Timeline</span>
+    </a>
+    <a class="tab" href="#notas" data-tab="notas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 3h10l4 4v14H5Z"/><path d="M15 3v4h4M8.5 12h7M8.5 16h5"/></svg>
+      <span>Notas <span class="tab-badge" id="tabBadge"></span></span>
+    </a>
+  </div>
+</nav>
+
+<script>
+const ITEMS = [
+{id:"cap1",w:1,t:"Captain America",s:"The First Avenger",k:"Filme",y:"2011"},
+{id:"cmarvel",w:0,t:"Captain Marvel",k:"Filme",y:"2019",
+ n:["1995. Carol Danvers é piloto da Força Aérea americana e ganha poderes cósmicos quando um motor alimentado pelo Tesseract explode à sua frente. Os Kree apagam-lhe a memória e transformam-na na guerreira Vers.",
+ "De volta à Terra, ao lado de um Nick Fury jovem e ainda com os dois olhos, descobre a verdade: os Skrulls, que lhe ensinaram a odiar, são refugiados, e os opressores são os Kree. Carol vira-se contra eles e parte para o espaço para ajudar os Skrulls a encontrar uma casa.",
+ "Antes de ir, deixa a Fury um pager modificado para emergências. O gato Goose é na verdade um Flerken, um alienígena, e é ele quem arranha o olho de Fury."],
+ keep:["Fury tira o nome Avengers do indicativo de Carol na Força Aérea.","O pager volta a aparecer no fim de Infinity War.","O Tesseract fica com a S.H.I.E.L.D. É ele que Loki rouba em The Avengers.","Talos e os Skrulls voltam mais tarde, em Far From Home."]},
+{id:"im1",w:1,t:"Iron Man",k:"Filme",y:"2008"},
+{id:"im2",w:0,t:"Iron Man 2",k:"Filme",y:"2010",
+ n:["Tony revelou ao mundo que é o Iron Man e recusa entregar a armadura ao governo. Às escondidas está a morrer: o paládio do reator que tem no peito está a envenená-lo.",
+ "Ivan Vanko, filho de um antigo sócio do pai de Tony, ataca-o com chicotes elétricos e alia-se ao rival Justin Hammer. Tony encontra nas notas do pai, Howard Stark, a fórmula de um elemento novo que lhe salva a vida.",
+ "Rhodey fica com uma das armaduras e torna-se War Machine. Natasha Romanoff aparece pela primeira vez, infiltrada como assistente de Tony, a trabalhar para Nick Fury."],
+ keep:["Natasha (Black Widow) e Rhodey (War Machine) entram aqui.","Fury já está a montar a Iniciativa Avengers.","Na cena pós-créditos aparece o martelo de Thor no Novo México."]},
+{id:"hulk",w:0,t:"The Incredible Hulk",k:"Filme",y:"2008",
+ n:["Bruce Banner (aqui interpretado por Edward Norton; a partir de The Avengers é Mark Ruffalo) foi exposto a radiação gama numa experiência militar que tentava recriar o soro do super-soldado. Quando se enerva, transforma-se no Hulk.",
+ "Vive escondido no Brasil, a fugir do general Thaddeus Ross, pai de Betty, o amor de Bruce. Ross dá a um soldado, Emil Blonsky, uma versão do soro e sangue de Bruce, e Blonsky torna-se a Abominação. O Hulk derrota-o em Nova Iorque.",
+ "Um cientista, Samuel Sterns, é contaminado com o sangue de Bruce. No fim, Tony Stark aparece a falar com Ross sobre uma equipa que está a ser formada."],
+ keep:["Ross volta em Civil War como Secretário de Estado.","Samuel Sterns e Ross voltam a ser peças centrais muito mais à frente.","Blonsky (Abominação) volta em Shang-Chi e She-Hulk."]},
+{id:"thor1",w:1,t:"Thor",k:"Filme",y:"2011"},
+{id:"avengers",w:1,t:"The Avengers",k:"Filme",y:"2012"},
+{id:"thor2",w:0,t:"Thor",s:"The Dark World",k:"Filme",y:"2013",
+ n:["Jane Foster absorve sem querer o Éter, uma arma antiga que mais tarde se percebe ser a Joia da Realidade. Malekith, líder dos Elfos Negros, quer usá-la para mergulhar o universo na escuridão e ataca Asgard.",
+ "Frigga, mãe de Thor e de Loki, morre a proteger Jane. Thor tira Loki da prisão para se vingarem juntos, e Loki parece morrer em combate. Thor vence Malekith e decide ficar na Terra com Jane.",
+ "Na última cena descobre-se que Loki está vivo, disfarçado de Odin e sentado no trono de Asgard. O Éter é entregue ao Colecionador."],
+ keep:["Loki governa Asgard disfarçado de Odin: é assim que começa Ragnarok.","O Éter é a Joia da Realidade e fica com o Colecionador.","Frigga morreu. Isto pesa em Endgame."]},
+{id:"im3",w:0,t:"Iron Man 3",k:"Filme",y:"2013",
+ n:["Depois da batalha de Nova Iorque, Tony sofre de ansiedade e ataques de pânico e passa as noites a construir dezenas de armaduras. Um terrorista chamado Mandarim faz atentados pelo país.",
+ "Aldrich Killian, um cientista que Tony desprezou anos antes, criou o Extremis, um tratamento que regenera o corpo mas pode fazer explodir quem o recebe. O Mandarim é afinal um ator, Trevor Slattery, contratado por Killian para servir de fachada.",
+ "Tony derrota Killian com a ajuda de Pepper, que sobrevive ao Extremis. No fim, faz uma cirurgia para tirar os estilhaços do peito e destrói as armaduras, mas continua a ser o Iron Man."],
+ keep:["O verdadeiro Mandarim e a organização Ten Rings aparecem em Shang-Chi.","Harley, o miúdo que ajuda Tony, está no funeral em Endgame."]},
+{id:"cap2",w:1,t:"Captain America",s:"The Winter Soldier",k:"Filme",y:"2014"},
+{id:"gotg1",w:1,t:"Guardians of the Galaxy",k:"Filme",y:"2014"},
+{id:"gotg2",w:0,t:"Guardians of the Galaxy",s:"Vol. 2",k:"Filme",y:"2017",
+ n:["Os Guardiões são perseguidos pelos Sovereign depois de Rocket lhes roubar baterias. São salvos por Ego, que diz ser o pai de Peter Quill. Ego é um Celestial, um ser antiquíssimo que é ao mesmo tempo um planeta vivo, e Peter herda parte do seu poder.",
+ "Afinal Ego quer cobrir o universo inteiro de si próprio e foi ele quem provocou o tumor que matou a mãe de Peter. Peter destrói-o e perde os poderes. Yondu, que raptou Peter em criança, morre a salvá-lo, e Peter percebe que foi ele o verdadeiro pai.",
+ "Gamora e a irmã Nebula começam a fazer as pazes. Mantis, uma empata que sente as emoções dos outros, junta-se à equipa, e Groot é agora um bebé."],
+ keep:["Mantis e Nebula estão em Infinity War e Endgame.","Nebula odeia Thanos pelo que ele lhe fez. Vai importar.","Pós-créditos: os Sovereign criam Adam Warlock."]},
+{id:"aou",w:1,t:"Avengers",s:"Age of Ultron",k:"Filme",y:"2015"},
+{id:"netflix",w:0,t:"Netflix Heroes",k:"Séries",y:"2015 a 2019",
+ n:["Seis séries, todas em Nova Iorque, com heróis de rua. Em Daredevil, Matt Murdock é um advogado cego, com os outros sentidos apurados, que combate o crime em Hell's Kitchen e enfrenta Wilson Fisk, o Kingpin.",
+ "Jessica Jones é uma detetive privada com super-força, marcada pelo controlo mental de Kilgrave. Luke Cage tem pele impenetrável e protege Harlem. Danny Rand, o Iron Fist, domina uma energia mística de K'un-Lun. Em The Defenders, os quatro juntam-se contra a Mão, uma organização ancestral de ninjas.",
+ "The Punisher segue Frank Castle, um ex-militar que mata criminosos depois de lhe matarem a família. A história continua no Disney+ com Daredevil: Born Again (2025), onde Fisk chega a presidente da câmara de Nova Iorque."],
+ keep:["Matt Murdock aparece em No Way Home e em She-Hulk.","O Kingpin é o vilão escondido de Hawkeye.","Frank Castle (Jon Bernthal) está em Spider-Man: Brand New Day."]},
+{id:"antman",w:0,t:"Ant-Man",k:"Filme",y:"2015",
+ n:["Scott Lang é um ladrão com bom coração acabado de sair da prisão, que quer ser bom pai para a filha, Cassie. Hank Pym, o Ant-Man original e antigo cientista da S.H.I.E.L.D., escolhe-o para herdar o fato que encolhe graças às partículas Pym.",
+ "O objetivo é travar Darren Cross, antigo pupilo de Hank, que criou o fato Yellowjacket para o vender a quem pagar mais. Hope van Dyne, filha de Hank, treina Scott. Pelo meio, Scott luta com o Falcão numa base dos Avengers.",
+ "No combate final, Scott encolhe até ao nível subatómico e entra no Reino Quântico, onde a mulher de Hank, Janet, ficou perdida há 30 anos. Consegue sair, algo que ninguém julgava possível."],
+ keep:["O Reino Quântico é a chave do plano de Endgame.","Scott junta-se a Steve em Civil War.","No fim, Hope ganha o fato de Wasp."]},
+{id:"civilwar",w:1,t:"Captain America",s:"Civil War",k:"Filme",y:"2016"},
+{id:"bw",w:1,t:"Black Widow",k:"Filme",y:"2021"},
+{id:"bp",w:1,t:"Black Panther",k:"Filme",y:"2018"},
+{id:"homecoming",w:0,t:"Spider-Man",s:"Homecoming",k:"Filme",y:"2017",
+ n:["Peter Parker, 15 anos, volta para casa depois de lutar em Civil War e quer muito ser um Avenger. Tony dá-lhe um fato novo e põe Happy Hogan a vigiá-lo.",
+ "Adrian Toomes limpava os destroços da batalha de Nova Iorque até a empresa de Tony lhe tirar o contrato. Passou a vender armas feitas com tecnologia alienígena e tornou-se o Vulture. Peter descobre que Toomes é pai de Liz, a rapariga de quem gosta, derrota-o e salva-lhe a vida.",
+ "No fim, Tony convida-o para os Avengers e Peter recusa: prefere ser o herói do bairro. Na última cena, a tia May vê-o com o fato."],
+ keep:["A relação com Tony como mentor é o centro emocional de Far From Home.","Ned e MJ, os amigos de Peter, entram aqui.","A tia May sabe que ele é o Spider-Man."]},
+{id:"strange",w:0,t:"Doctor Strange",k:"Filme",y:"2016",
+ n:["Stephen Strange é um neurocirurgião brilhante e arrogante que destrói as mãos num acidente de carro. Procura uma cura em Kamar-Taj, no Nepal, onde a Anciã lhe ensina as artes místicas, ao lado de Mordo e de Wong.",
+ "Descobre que o Olho de Agamotto, o amuleto que usa ao peito, guarda a Joia do Tempo. Kaecilius, antigo aluno da Anciã, quer trazer Dormammu, um ser da Dimensão Sombria, para a Terra. A Anciã morre.",
+ "Strange vence usando a Joia do Tempo para prender Dormammu num ciclo infinito até ele desistir. Mordo, desiludido por ver as regras quebradas, vai-se embora."],
+ keep:["Strange é o guardião da Joia do Tempo em Infinity War.","Wong vai ser importante e acaba como Mago Supremo.","Pós-créditos: Strange ajuda Thor a procurar Odin, cena que aparece em Ragnarok."]},
+{id:"ragnarok",w:1,t:"Thor",s:"Ragnarok",k:"Filme",y:"2017"},
+{id:"antwasp",w:0,t:"Ant-Man and the Wasp",k:"Filme",y:"2018",
+ n:["Scott está em prisão domiciliária por ter ajudado Steve em Civil War. Hank e Hope descobrem que Janet está viva no Reino Quântico e pedem ajuda a Scott. Hope é agora a Wasp.",
+ "Pelo caminho aparece Ghost, Ava Starr, uma jovem que atravessa paredes e cujo corpo se desfaz por causa de um acidente quântico. Quer a energia de Janet para se curar. Resgatam Janet, que ainda ajuda Ava.",
+ "Na cena pós-créditos, Scott entra no Reino Quântico e, cá fora, Hank, Hope e Janet desaparecem no estalar de dedos de Thanos. Scott fica preso lá dentro."],
+ keep:["Ghost faz parte de Thunderbolts*.","É por estar preso no Reino Quântico que Scott escapa ao estalar e aparece em Endgame."]},
+{id:"iw",w:1,t:"Avengers",s:"Infinity War",k:"Filme",y:"2018"},
+{id:"endgame",w:1,t:"Avengers",s:"Endgame",k:"Filme",y:"2019"},
+{id:"loki",w:1,t:"Loki",s:"Temporadas 1 e 2",k:"Série",y:"2021 a 2023"},
+{id:"wandavision",w:0,t:"WandaVision",k:"Série",y:"2021",
+ n:["Três semanas depois de Endgame, Wanda vive com Vision numa sitcom perfeita em Westview, e cada episódio imita uma década da televisão. Na verdade, Wanda, desfeita pelo luto, prendeu a vila inteira numa realidade criada por ela e recriou Vision. Tem até gémeos, Billy e Tommy.",
+ "A vizinha Agnes é Agatha Harkness, uma bruxa centenária que revela a Wanda que ela é a Feiticeira Escarlate, uma figura de lenda. A S.W.O.R.D. reconstruiu o corpo original de Vision, branco e sem memórias, mas o Vision de Wanda devolve-lhe as recordações e o Vision Branco foge.",
+ "Wanda desfaz a ilusão e perde a família. Monica Rambeau ganha poderes ao atravessar a barreira. No fim, Wanda estuda o Darkhold, um livro proibido, e ouve os filhos a pedir ajuda."],
+ keep:["Explica a Wanda que aparece em Multiverse of Madness.","Agatha volta em Agatha All Along, o Vision Branco em VisionQuest.","Monica Rambeau volta em The Marvels."]},
+{id:"shangchi",w:0,t:"Shang-Chi",s:"and the Legend of the Ten Rings",k:"Filme",y:"2021",
+ n:["Shang-Chi vive em São Francisco a arrumar carros, a fugir do pai, Wenwu, um guerreiro com mil anos que usa os Dez Anéis e lidera a organização com o mesmo nome. É ele o verdadeiro Mandarim de que se falava em Iron Man 3.",
+ "Wenwu acredita que a mulher morta está presa em Ta Lo, a aldeia mística de onde ela vinha, e quer abrir o portal que a guarda. A voz que ouve é afinal do Habitante da Escuridão, um ser que se alimenta de almas. Shang-Chi, a irmã Xialing e a amiga Katy lutam ao lado de Ta Lo.",
+ "Wenwu morre a salvar o filho e entrega-lhe os anéis. Na cena pós-créditos, Wong, Bruce Banner e Carol Danvers analisam os anéis, que estão a emitir um sinal desconhecido."],
+ keep:["Shang-Chi está confirmado em Avengers: Doomsday.","Xialing fica a comandar os Dez Anéis.","Os anéis emitem um sinal que ainda ninguém explicou."]},
+{id:"faws",w:1,t:"The Falcon and the Winter Soldier",k:"Série",y:"2021"},
+{id:"ffh",w:1,t:"Spider-Man",s:"Far From Home",k:"Filme",y:"2019"},
+{id:"eternals",w:0,t:"Eternals",k:"Filme",y:"2021",
+ n:["Os Eternos são dez imortais enviados há 7000 anos pelo Celestial Arishem para proteger a humanidade dos Desviantes. Estão proibidos de interferir em qualquer outro conflito, por isso não lutaram contra Thanos.",
+ "Descobrem que a verdadeira missão era deixar a população crescer até fazer nascer um novo Celestial, Tiamut, de dentro da Terra, o que destruiria o planeta. O grupo divide-se. Sersi trava o nascimento e transforma Tiamut em pedra: fica uma estátua gigante no Oceano Índico.",
+ "Arishem leva Sersi, Kingo e Phastos para julgar a humanidade. Nas cenas finais aparecem Eros, irmão de Thanos, e Dane Whitman, o futuro Black Knight."],
+ keep:["A estátua de Tiamut volta a ser importante em Brave New World.","Os Celestiais criam planetas e podem destruí-los."]},
+{id:"nwh",w:1,t:"Spider-Man",s:"No Way Home",k:"Filme",y:"2021"},
+{id:"mom",w:1,t:"Doctor Strange",s:"in the Multiverse of Madness",k:"Filme",y:"2022"},
+{id:"hawkeye",w:0,t:"Hawkeye",k:"Série",y:"2021",
+ n:["Época de Natal em Nova Iorque. Clint Barton só quer passar a consoada com a família. Kate Bishop, uma arqueira fã do Hawkeye, encontra o fato de Ronin, a identidade que Clint usou durante os cinco anos do estalar para matar criminosos, e fica debaixo de mira.",
+ "Clint treina-a. Atrás deles andam a Máfia do Fato de Treino, Maya Lopez (Echo) e Yelena Belova, convencida de que Clint é o culpado da morte de Natasha. Quem está por trás é Wilson Fisk, o Kingpin, e a mãe de Kate trabalhava para ele.",
+ "Clint convence Yelena da verdade, Kate torna-se a nova Hawkeye e Clint chega a casa a tempo do Natal."],
+ keep:["O luto de Yelena por Natasha é a base de Thunderbolts*.","Clint ficou parcialmente surdo.","O Kingpin sobrevive."]},
+{id:"moonknight",w:0,t:"Moon Knight",k:"Série",y:"2022",
+ n:["Steven Grant trabalha na loja de um museu em Londres e tem apagões que o fazem acordar em sítios estranhos. Descobre que partilha o corpo com Marc Spector, um ex-mercenário que é o avatar de Khonshu, deus egípcio da Lua.",
+ "Arthur Harrow, antigo avatar de Khonshu, quer libertar a deusa Ammit para julgar as pessoas antes de cometerem crimes. Marc e Steven aprendem a viver juntos. Layla, mulher de Marc, torna-se a Scarlet Scarab.",
+ "No fim percebe-se que há uma terceira personalidade, Jake Lockley."],
+ keep:["História independente, sem ligação direta a Doomsday."]},
+{id:"wf",w:1,t:"Black Panther",s:"Wakanda Forever",k:"Filme",y:"2022"},
+{id:"shehulk",w:0,t:"She-Hulk",s:"Attorney at Law",k:"Série",y:"2022",
+ n:["Jennifer Walters, advogada e prima de Bruce Banner, tem um acidente de carro com ele e é contaminada pelo seu sangue. Ganha os poderes do Hulk mas mantém sempre a cabeça fria.",
+ "Vai trabalhar numa divisão de direito para super-humanos, onde defende a liberdade condicional de Blonsky, a Abominação. Bruce, que desde Endgame é ao mesmo tempo Bruce e Hulk, parte para o espaço. A série quebra muitas vezes a quarta parede e Matt Murdock, o Daredevil, aparece num caso.",
+ "No último episódio, Bruce volta de Sakaar, o planeta de Ragnarok, com um filho chamado Skaar."],
+ keep:["Bruce tem um filho, Skaar.","Bruce e Hulk são agora uma só pessoa."]},
+{id:"msmarvel",w:0,t:"Ms. Marvel",k:"Série",y:"2022",
+ n:["Kamala Khan é uma adolescente paquistanesa-americana de Jersey City, fã obcecada da Capitã Marvel. Uma pulseira da bisavó desperta-lhe poderes de luz sólida.",
+ "Descobre que a família está ligada aos Djinn, seres de outra dimensão, e à Partição da Índia em 1947. No fim, percebe-se que Kamala tem uma mutação genética: é a primeira referência direta a mutantes no MCU, com a música dos X-Men animados de fundo.",
+ "Na cena pós-créditos, Kamala troca de lugar com a Capitã Marvel."],
+ keep:["Os mutantes existem no universo principal.","A troca de lugar é o ponto de partida de The Marvels."]},
+{id:"lovethunder",w:0,t:"Thor",s:"Love and Thunder",k:"Filme",y:"2022",
+ n:["Thor anda pelo espaço com os Guardiões até saber que Gorr, o Carniceiro de Deuses, está a matar deuses com a Necrosword, uma espada amaldiçoada. Jane Foster tem cancro em estado avançado e o Mjolnir, reconstruído, escolhe-a: torna-se a Mighty Thor, mas os poderes aceleram a doença.",
+ "Thor, Jane, Valquíria e Korg pedem ajuda a Zeus, que recusa. Gorr quer chegar à Eternidade para desejar a morte de todos os deuses. Thor e Jane convencem-no a desejar antes o regresso da filha, Love.",
+ "Jane morre e vai para Valhalla. Gorr morre também e Thor fica a criar Love como filha."],
+ keep:["Thor é agora pai adotivo de Love.","Valquíria é rei de Nova Asgard.","Pós-créditos: Zeus manda o filho Hércules atrás de Thor."]},
+{id:"quantumania",w:0,t:"Ant-Man and the Wasp",s:"Quantumania",k:"Filme",y:"2023",
+ n:["Cassie, filha de Scott, já adolescente, constrói com Hank um dispositivo para comunicar com o Reino Quântico. Scott, Hope, Cassie, Hank e Janet são sugados lá para dentro.",
+ "Janet escondeu que, nos 30 anos que lá passou, conheceu e prendeu Kang, o Conquistador, uma variante do vilão do final de Loki. Kang quer fugir para voltar a conquistar o multiverso. Darren Cross, o vilão do primeiro Ant-Man, reaparece como M.O.D.O.K.",
+ "A família derrota Kang. Na cena pós-créditos, um Conselho de milhares de Kangs reúne-se."],
+ keep:["A Marvel abandonou o Kang depois de afastar o ator. Por isso o grande vilão de Doomsday passou a ser o Doctor Doom.","Cassie também tem um fato."]},
+{id:"gotg3",w:0,t:"Guardians of the Galaxy",s:"Vol. 3",k:"Filme",y:"2023",
+ n:["O High Evolutionary, um cientista obcecado em criar uma sociedade perfeita, quer recuperar Rocket, que foi uma das suas cobaias. Adam Warlock ataca e Rocket fica às portas da morte.",
+ "Os Guardiões, com Gamora (a de 2014, que veio com Thanos em Endgame e não se lembra de Peter), invadem a nave do vilão para o salvar. Em flashbacks vemos a infância dolorosa de Rocket. Salvam-no e libertam as crianças das experiências.",
+ "No fim a equipa separa-se: Peter volta à Terra para ver o avô, Mantis segue sozinha, Drax e Nebula ficam em Knowhere e Rocket lidera uns novos Guardiões."],
+ keep:["Rocket é o novo líder dos Guardiões.","Peter Quill está na Terra.","Esta Gamora não tem a história com Peter."]},
+{id:"secretinv",w:0,t:"Secret Invasion",k:"Série",y:"2023",
+ n:["Os Skrulls a quem Carol e Fury prometeram uma casa em 1995 continuam escondidos na Terra. Uma fação radical, liderada por Gravik, infiltrou-se em governos e quer provocar uma guerra entre humanos.",
+ "Fury regressa do espaço para os travar. Maria Hill e Talos morrem. Descobre-se que Rhodey tinha sido substituído por um Skrull havia algum tempo. Gravik e G'iah, filha de Talos, ganham poderes de vários heróis graças a ADN recolhido.",
+ "No fim, o presidente americano declara os alienígenas inimigos e Fury parte para o espaço."],
+ keep:["Série dispensável.","O verdadeiro Rhodey estava preso e foi libertado."]},
+{id:"themarvels",w:0,t:"The Marvels",k:"Filme",y:"2023",
+ n:["Carol Danvers, Monica Rambeau e Kamala Khan passam a trocar de lugar sempre que usam os poderes. A vilã é Dar-Benn, líder dos Kree, que usa a outra pulseira de Kamala para roubar recursos a outros planetas. O planeta Kree está a morrer porque Carol destruiu a Inteligência Suprema, por isso chamam-lhe a Aniquiladora.",
+ "As três vencem, mas Monica fica presa noutro universo. Na cena a meio dos créditos, acorda num mundo onde a mãe é uma heroína chamada Binary e é tratada pelo Beast, dos X-Men da Fox.",
+ "Kamala recruta Kate Bishop para formar os Young Avengers."],
+ keep:["O Beast de Kelsey Grammer volta em Doomsday.","Monica está noutro universo.","Kamala está a montar uma equipa jovem."]},
+{id:"deadpool1",w:0,t:"Deadpool",k:"Filme",y:"2016",
+ n:["Universo dos X-Men da Fox. Wade Wilson é um mercenário com cancro terminal. Aceita um tratamento secreto de um homem chamado Ajax, que lhe ativa um fator de cura mutante mas o deixa desfigurado.",
+ "Passa o filme a caçar Ajax para que lhe devolva a cara e poder voltar para a namorada, Vanessa. Colossus e Negasonic Teenage Warhead, dos X-Men, tentam recrutá-lo. Deadpool sabe que está num filme e fala com o público.",
+ "Mata Ajax, percebe que a cura é impossível e Vanessa aceita-o assim mesmo."],
+ keep:["Passa-se num universo separado do MCU.","Vanessa e os amigos de Wade voltam em Deadpool & Wolverine."]},
+{id:"deadpool2",w:0,t:"Deadpool 2",k:"Filme",y:"2018",
+ n:["Vanessa é morta no início e Wade entra em espiral. Colossus leva-o para os X-Men como estagiário. Russell, um jovem mutante revoltado que lança fogo, é perseguido por Cable, um soldado do futuro que o quer matar antes que se torne um assassino.",
+ "Deadpool forma a X-Force, que morre quase toda de forma ridícula logo na primeira missão. Só Domino sobrevive. Wade sacrifica-se para salvar Russell e mudar o futuro, e Cable usa o dispositivo de viagem no tempo para o salvar.",
+ "Nas cenas pós-créditos, Wade usa esse dispositivo para salvar Vanessa e corrigir alguns erros da sua própria carreira."],
+ keep:["Vanessa está viva.","Cable, Domino e Colossus são referidos em Deadpool & Wolverine."]},
+{id:"dw",w:1,t:"Deadpool & Wolverine",k:"Filme",y:"2024"},
+{id:"agatha",w:0,t:"Agatha All Along",k:"Série",y:"2024",
+ n:["Agatha Harkness está presa em Westview desde WandaVision, sob um feitiço de Wanda. Um adolescente misterioso, o Teen, liberta-a e pede-lhe para seguirem a Estrada das Bruxas, um caminho mágico que dá a cada bruxa o que deseja.",
+ "Formam um coven, enfrentam provas e são perseguidas por Rio Vidal, que é a própria Morte e antiga amante de Agatha. O Teen é Billy Maximoff, um dos filhos de Wanda, que renasceu no corpo de outro rapaz, William Kaplan.",
+ "Agatha morre e regressa como fantasma, ao lado de Billy, que parte à procura do irmão, Tommy."],
+ keep:["Billy, filho de Wanda, está vivo e tem poderes.","Tommy anda algures por aí."]},
+{id:"bnw",w:0,t:"Captain America",s:"Brave New World",k:"Filme",y:"2025",
+ n:["Sam Wilson é agora o Capitão América e Thaddeus Ross, o general que perseguia o Hulk, foi eleito Presidente dos Estados Unidos. Na estátua de Tiamut, deixada em Eternals e agora chamada Ilha Celestial, descobriu-se adamantium, um metal indestrutível que todos os países querem.",
+ "Isaiah Bradley, o super-soldado esquecido de Falcon and the Winter Soldier, é controlado mentalmente para atacar o presidente. Por trás está Samuel Sterns, o cientista de The Incredible Hulk, agora com uma inteligência gigantesca. Ross transforma-se no Red Hulk e destrói parte de Washington até Sam o acalmar.",
+ "Ross entrega-se e vai para a prisão. Joaquín Torres torna-se o novo Falcão e Sam decide reconstruir os Avengers. Na cena pós-créditos, Sterns avisa que há outros mundos e que vêm aí."],
+ keep:["Sam quer voltar a reunir os Avengers.","O adamantium, o metal do Wolverine, existe no MCU.","Torres (o novo Falcão) está confirmado em Doomsday.","O aviso de Sterns aponta diretamente para o multiverso."]},
+{id:"thunderbolts",w:1,t:"Thunderbolts*",k:"Filme",y:"2025"},
+{id:"bnd",w:1,t:"Spider-Man",s:"Brand New Day",k:"Filme",y:"2026"},
+{id:"visionquest",w:0,t:"VisionQuest",k:"Série",y:"2026",
+ n:["Estreia no Disney+ a 14 de outubro de 2026, por isso esta nota fica-se pelo ponto de partida.",
+ "No fim de WandaVision, o Vision Branco, reconstruído pela S.W.O.R.D. e com as memórias recuperadas, voou para parte incerta. É ele o protagonista. A série fecha a trilogia que começou em WandaVision e continuou em Agatha All Along.",
+ "Segundo o que já foi anunciado, James Spader regressa como Ultron."],
+ keep:["Se a série já tiver saído quando chegarem aqui, podem vê-la em vez de ler.","Esta nota vai ser atualizada depois da estreia."]},
+{id:"f4",w:1,t:"The Fantastic Four",s:"First Steps",k:"Filme",y:"2025"}
+];
+
+const DOOMSDAY = new Date(2026,11,18,20,10);
+const KEY = "missao-doomsday-v1";
+let S = {seen:{},open:{},read:{}};
+try{ const r = localStorage.getItem(KEY); if(r){ const p = JSON.parse(r); S = {seen:p.seen||{},open:p.open||{},read:p.read||{}}; } }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const WATCH = ITEMS.filter(i=>i.w);
+const NOTES = ITEMS.filter(i=>!i.w);
+const expanded = new Set();
+let filter = "tudo";
+let resetArmed = false;
+
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const name = i => i.t + (i.s ? " " + i.s : "");
+const fmtN = new Intl.NumberFormat("pt-PT");
+
+function nextWatch(){ return WATCH.find(i=>!S.seen[i.id]) || null; }
+function notesBefore(item){
+  const idx = ITEMS.indexOf(item); const out=[];
+  for(let j=idx-1;j>=0;j--){ if(ITEMS[j].w) break; out.unshift(ITEMS[j]); }
+  return out;
+}
+function parentWatch(note){
+  const idx = ITEMS.indexOf(note);
+  for(let j=idx+1;j<ITEMS.length;j++){ if(ITEMS[j].w) return ITEMS[j]; }
+  return null;
+}
+function watchNo(item){ return WATCH.indexOf(item)+1; }
+
+const CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const WARN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 3 2 20h20Z"/><path d="M12 10v4M12 17v.5"/></svg>';
+
+function noteCard(n, ctx){
+  const isOpen = expanded.has(ctx+n.id);
+  const read = !!S.read[n.id];
+  const rev = !!S.open[n.id];
+  const bid = "nb-"+ctx+n.id;
+  let body = "";
+  if(isOpen){
+    if(!rev){
+      body = `<div class="gate">
+        <div class="gate-t">${WARN}<span>Spoilers</span></div>
+        <p>Esta nota conta a história de <b>${esc(name(n))}</b>, incluindo o final. Lê só se não fores ver.</p>
+        <button class="btn btn-red btn-sm" data-act="reveal" data-id="${n.id}">Mostrar spoilers</button>
+      </div>`;
+    } else {
+      body = `<div class="note-text">${n.n.map(p=>`<p>${esc(p)}</p>`).join("")}</div>
+        <div class="keep"><div class="eyebrow red">Para levar para a frente</div><ul>${n.keep.map(k=>`<li>${esc(k)}</li>`).join("")}</ul></div>
+        <div class="note-actions">${read
+          ? `<span class="done-txt">Lida</span><button class="btn btn-soft btn-sm" data-act="unread" data-id="${n.id}">Marcar como não lida</button>`
+          : `<button class="btn btn-red btn-sm" data-act="read" data-id="${n.id}">Marcar como lida</button>`}</div>`;
+    }
+  }
+  return `<article class="note${read?" read":""}">
+    <button class="note-head" aria-expanded="${isOpen}" aria-controls="${bid}" data-act="toggle" data-key="${ctx+n.id}">
+      <span class="note-ico" aria-hidden="true">${read?"✓":"!"}</span>
+      <span class="note-name"><b>${esc(name(n))}</b><span>${esc(n.k)} · ${esc(n.y)} · ${read?"Lida":"Nota com spoilers"}</span></span>
+      ${CHEV}
+    </button>
+    <div class="note-body" id="${bid}" ${isOpen?"":"hidden"}>${body}</div>
+  </article>`;
+}
+
+function segs(){
+  const nx = nextWatch();
+  return `<div class="segs" aria-hidden="true">${WATCH.map(i=>`<i class="${S.seen[i.id]?"on":(i===nx?"now":"")}"></i>`).join("")}</div>`;
+}
+function timeLeft(){
+  const ms = Math.max(0, DOOMSDAY - new Date());
+  return {ms, d:Math.floor(ms/86400000), h:Math.floor(ms%86400000/3600000), m:Math.floor(ms%3600000/60000)};
+}
+function doomHTML(){
+  const L = timeLeft();
+  const dateTxt = new Intl.DateTimeFormat("pt-PT",{day:"numeric",month:"long"}).format(DOOMSDAY);
+  const u = 'style="font-family:var(--f-label);font-size:14px;color:var(--mute);letter-spacing:.06em"';
+  const big = L.ms===0 ? "Hoje" : (L.d>0 ? `${fmtN.format(L.d)}<span ${u}> D </span>${L.h}<span ${u}> H</span>` : `${L.h}<span ${u}> H </span>${L.m}<span ${u}> MIN</span>`);
+  return `<div class="doom-txt"><b>Avengers: Doomsday</b><span>Sessão a ${dateTxt}, às 20h10</span></div><div class="doom-days">${big}</div>`;
+}
+
+function renderHome(){
+  const nx = nextWatch();
+  const seenN = WATCH.filter(i=>S.seen[i.id]).length;
+  const readN = NOTES.filter(i=>S.read[i.id]).length;
+  let html = `<h1 class="sr" id="h-inicio">Próximo projeto</h1>
+  <div>${segs()}<div class="prog-meta"><span>${seenN} de ${WATCH.length} vistos</span><span>${readN} de ${NOTES.length} notas lidas</span></div></div>`;
+
+  if(!nx){
+    html += `<div class="hero"><div class="hero-top"><div class="hero-num">23<small>de 23</small></div><span class="tag">Missão cumprida</span></div>
+      <div><h2 class="hero-title">Prontos para Doomsday</h2></div>
+      <p class="hero-log">Viram tudo o que era preciso. Agora é esperar pela estreia.</p></div>`;
+  } else {
+    const before = notesBefore(nx);
+    const pending = before.filter(n=>!S.read[n.id]);
+    before.forEach(n=>{ if(!expanded.has("h"+n.id) && !S.read[n.id] && !expanded.has("hx"+n.id)) expanded.add("h"+n.id); });
+    html += `<div class="hero">
+      <div class="hero-top"><div class="hero-num">${String(watchNo(nx)).padStart(2,"0")}<small>de ${WATCH.length} · ${esc(nx.y)}</small></div><span class="tag">${esc(nx.k)}</span></div>
+      <div><div class="eyebrow" style="color:var(--tile-mute)">A seguir</div><h2 class="hero-title">${esc(nx.t)}</h2>${nx.s?`<div class="hero-sub">${esc(nx.s)}</div>`:""}</div>
+      <div class="hero-actions">
+        <button class="btn btn-red" data-act="seen" data-id="${nx.id}">Marcar como visto</button>
+        ${pending.length?`<a class="btn btn-ghost-tile" href="#antes">Ler ${pending.length} ${pending.length===1?"nota":"notas"} antes</a>`:""}
+      </div>
+    </div>`;
+
+    html += `<section class="group" id="antes" aria-labelledby="h-antes">
+      <div class="sec-head"><h2 class="sec-title" id="h-antes">Antes de ver</h2><span class="eyebrow">${before.length?`${before.length} ${before.length===1?"nota":"notas"}`:""}</span></div>`;
+    if(before.length){
+      html += `<p style="color:var(--ink-2)">Estes projetos ficaram de fora da lista. A nota conta o essencial para não se perderem em ${esc(name(nx))}.</p>
+        <div class="notes">${before.map(n=>noteCard(n,"h")).join("")}</div>`;
+    } else {
+      html += `<div class="empty"><b>Nada para ler</b>Não há projetos saltados entre o último que viram e este. Podem avançar.</div>`;
+    }
+    html += `</section>`;
+
+    const later = WATCH.slice(watchNo(nx), watchNo(nx)+3);
+    if(later.length){
+      html += `<section class="group" aria-labelledby="h-depois"><div class="sec-head"><h2 class="sec-title" id="h-depois">Depois deste</h2><a class="eyebrow red" href="#timeline">Ver timeline</a></div>
+      <div class="after">${later.map(i=>{ const nb = notesBefore(i).length; return `<div class="after-row"><span class="after-n">${String(watchNo(i)).padStart(2,"0")}</span><div style="min-width:0"><b>${esc(name(i))}</b><span>${esc(i.k)} · ${esc(i.y)}</span></div>${nb?`<span class="mini red">+${nb} ${nb===1?"nota":"notas"}</span>`:""}</div>`; }).join("")}</div></section>`;
+    }
+  }
+
+  html += `<div class="doom" id="doom">${doomHTML()}</div>`;
+  document.getElementById("view-inicio").innerHTML = html;
+}
+
+function renderTimeline(){
+  const nx = nextWatch();
+  const chips = [["tudo","Tudo · "+ITEMS.length],["ver","Para ver · "+WATCH.length],["notas","Notas · "+NOTES.length]];
+  let html = `<div class="sec-head"><h1 class="sec-title" id="h-timeline">Timeline</h1><span class="eyebrow">${ITEMS.length} projetos</span></div>
+  <div class="chips" role="group" aria-label="Filtrar timeline">${chips.map(([k,l])=>`<button class="chip" aria-pressed="${filter===k}" data-act="filter" data-f="${k}">${l}</button>`).join("")}</div>
+  <ol class="tl" style="list-style:none;margin:0;padding:0">`;
+  ITEMS.forEach(i=>{
+    if(filter==="ver" && !i.w) return;
+    if(filter==="notas" && i.w) return;
+    if(i.w){
+      const seen = !!S.seen[i.id]; const cur = i===nx;
+      html += `<li class="tl-item watch${seen?" seen":""}${cur?" current":""}">
+        <div class="tl-node"><input type="checkbox" class="cbx" id="cb-${i.id}" data-act="check" data-id="${i.id}" ${seen?"checked":""}></div>
+        <label class="tl-main tl-watch" for="cb-${i.id}">
+          <span class="t">${esc(i.t)}</span>${i.s?`<span class="s">${esc(i.s)}</span>`:""}
+          <span class="m"><span class="mini">${String(watchNo(i)).padStart(2,"0")} · ${esc(i.k)} · ${esc(i.y)}</span>${cur?'<span class="now-pill">A seguir</span>':""}</span>
+        </label></li>`;
+    } else {
+      html += `<li class="tl-item note-i${S.read[i.id]?" read":""}"><div class="tl-node" aria-hidden="true"></div><div class="tl-main">${noteCard(i,"t")}</div></li>`;
+    }
+  });
+  html += `</ol>`;
+  document.getElementById("view-timeline").innerHTML = html;
+}
+
+function renderNotes(){
+  const readN = NOTES.filter(i=>S.read[i.id]).length;
+  let html = `<div class="sec-head"><h1 class="sec-title" id="h-notas">Notas</h1><span class="eyebrow">${readN} de ${NOTES.length} lidas</span></div>
+  <p style="color:var(--ink-2)">Os ${NOTES.length} projetos que ficaram de fora, agrupados pelo filme ou série antes do qual devem ser lidos. Cada nota tem spoilers e pede confirmação para abrir.</p>`;
+  const groups = [];
+  NOTES.forEach(n=>{ const p = parentWatch(n); let g = groups.find(x=>x.p===p); if(!g){ g={p,list:[]}; groups.push(g);} g.list.push(n); });
+  groups.forEach(g=>{
+    const allRead = g.list.every(n=>S.read[n.id]);
+    html += `<section class="group"><div class="group-h"><span class="eyebrow ${allRead?"":"red"}">Antes de</span><b>${g.p?esc(name(g.p)):"Doomsday"}</b>${g.p&&S.seen[g.p.id]?'<span class="mini">· já visto</span>':""}</div>
+      <div class="notes">${g.list.map(n=>noteCard(n,"n")).join("")}</div></section>`;
+  });
+  html += `<div class="reset"><p>Apaga os vistos, as notas lidas e os spoilers revelados neste dispositivo.</p>
+    ${resetArmed
+      ? `<div class="note-actions"><button class="btn btn-red btn-sm" data-act="reset-yes">Sim, apagar progresso</button><button class="btn btn-soft btn-sm" data-act="reset-no">Cancelar</button></div>`
+      : `<button class="btn btn-soft btn-sm" data-act="reset">Recomeçar do zero</button>`}</div>`;
+  document.getElementById("view-notas").innerHTML = html;
+}
+
+function renderHeader(){
+  const seenN = WATCH.filter(i=>S.seen[i.id]).length;
+  const unread = NOTES.filter(i=>!S.read[i.id]).length;
+  document.getElementById("hdrCount").innerHTML = `<b>${seenN}</b>/${WATCH.length} vistos`;
+  document.getElementById("tabBadge").textContent = unread ? "· "+unread : "";
+}
+
+function current(){ const h = location.hash.replace("#",""); return ["inicio","timeline","notas"].includes(h)?h:(h==="antes"?"inicio":"inicio"); }
+function render(){
+  renderHeader(); renderHome(); renderTimeline(); renderNotes();
+  const c = current();
+  ["inicio","timeline","notas"].forEach(v=>{ document.getElementById("view-"+v).hidden = v!==c; });
+  document.querySelectorAll(".tab").forEach(t=>{ if(t.dataset.tab===c) t.setAttribute("aria-current","page"); else t.removeAttribute("aria-current"); });
+}
+
+document.addEventListener("click", e=>{
+  const el = e.target.closest("[data-act]"); if(!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  if(a==="check") return;
+  if(a==="toggle"){ const k = el.dataset.key; if(expanded.has(k)){ expanded.delete(k); if(k[0]==="h") expanded.add("hx"+k.slice(1)); } else expanded.add(k); }
+  else if(a==="reveal"){ S.open[id]=1; save(); }
+  else if(a==="read"){ S.read[id]=1; S.open[id]=1; save(); }
+  else if(a==="unread"){ delete S.read[id]; save(); }
+  else if(a==="seen"){ S.seen[id]=1; save(); window.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"}); }
+  else if(a==="filter"){ filter = el.dataset.f; }
+  else if(a==="reset"){ resetArmed = true; }
+  else if(a==="reset-no"){ resetArmed = false; }
+  else if(a==="reset-yes"){ S={seen:{},open:{},read:{}}; save(); resetArmed=false; expanded.clear(); }
+  else return;
+  const keep = el.dataset.key || (id ? id : null);
+  render();
+  if(keep){ const again = document.querySelector(`[data-key="${CSS.escape(el.dataset.key||"")}"]`); if(again && a==="toggle") again.focus({preventScroll:true}); }
+});
+document.addEventListener("change", e=>{
+  const el = e.target; if(el.dataset.act!=="check") return;
+  if(el.checked) S.seen[el.dataset.id]=1; else delete S.seen[el.dataset.id];
+  save(); render();
+  const again = document.getElementById(el.id); if(again) again.focus({preventScroll:true});
+});
+window.addEventListener("hashchange", ()=>{
+  const h = location.hash;
+  render();
+  if(h==="#antes"){ const t=document.getElementById("antes"); if(t) t.scrollIntoView(); }
+  else window.scrollTo(0,0);
+});
+render();
+setInterval(()=>{ const d=document.getElementById("doom"); if(d) d.innerHTML=doomHTML(); },30000);
+</script>
+
+</body></html>
